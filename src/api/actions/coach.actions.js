@@ -41,8 +41,6 @@ export const getAllCoachsByUser = createAsyncThunk(
   }
 );
 
-
-
 export const ajoutCoach = createAsyncThunk(
   "register/addCoach",
   async (myForm) => {
@@ -91,10 +89,10 @@ export const updateCoach = createAsyncThunk(
     try {
       const configuration = {
         headers: {
-          "Content-type": "application/json",
+          "Content-Type": "multipart/form-data",
         },
       };
-      let response = await axios.put(
+      let response = await axios.post(
         `${apiBaseUrl}/coach/${id}`,
         selectedItem,
         configuration

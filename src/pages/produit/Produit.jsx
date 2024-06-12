@@ -3,21 +3,24 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
+
 import {
-  getAllCoach,
-  ajoutCoach,
-  deleteCoach,
-  updateCoach,
-  getAllCoachsByUser,
-} from "../../api/actions/coach.actions";
-const Coach = () => {
+  getAllProgduitsByUser,
+  ajoutProduit,
+  deleteProduit,
+  getAllProduit,
+  updateProduit,
+} from "../../api/actions/produit.actions";
+const Produit = () => {
   const dispatch = useDispatch();
-  // const { data } = useSelector((state) => state.coach.coachs);
+
   const datauser = useSelector(
     (state) => state?.gerant?.current?.data?.salle?.id
   );
   const salleId = datauser;
-  const coachsalle = useSelector((state) => state?.coach?.coachsuser?.data);
+  const produitsalle = useSelector(
+    (state) => state?.Produit?.produitsuser?.data
+  );
 
   const [isModalOpen, setModalOpen] = useState(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -25,41 +28,38 @@ const Coach = () => {
   const [itemToDelete, setItemToDelete] = useState(null);
   const [selectedItem, setSelectedItem] = useState({});
 
-  const [coach, setCoach] = useState({
-    Nom: "",
-    Specialite: "",
+  const [produit, setProduit] = useState({
+    Nomproduit: "",
     Description: "",
+    Prix: "",
     file: "",
     salle: salleId,
   });
 
-  const { Nom, Specialite, Description, file, salle } = coach;
+  const { Nomproduit, Description, Prix, file, salle } = produit;
 
   const handleImageChange = (e) => {
-    setCoach({ ...coach, file: e.target.files[0] });
-  };
-  const handleSelectChange = (e) => {
-    setCoach({ ...coach, Specialite: e.target.value });
+    setProduit({ ...produit, file: e.target.files[0] });
   };
 
   useEffect(() => {
     if (salleId) {
-      setCoach({ ...coach, salle: salleId });
+      setProduit({ ...produit, salle: salleId });
     }
-    dispatch(getAllCoachsByUser());
+    dispatch(getAllProgduitsByUser());
   }, [dispatch, datauser]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const myForm = new FormData();
-    myForm.set("Nom", Nom);
-    myForm.set("Specialite", Specialite);
+    myForm.set("Nomproduit", Nomproduit);
     myForm.set("Description", Description);
+    myForm.set("Prix", Prix);
     myForm.set("file", file);
     myForm.set("salle", salle);
 
-    dispatch(ajoutCoach(myForm)).then(() => {
-      dispatch(getAllCoachsByUser());
+    dispatch(ajoutProduit(myForm)).then(() => {
+      dispatch(getAllProgduitsByUser());
     });
 
     setModalOpen(!isModalOpen);
@@ -74,6 +74,15 @@ const Coach = () => {
     toggleDeleteModal(); // Ouvrir le modal pour demander confirmation
   };
 
+  const confirmDelete = () => {
+    if (itemToDelete) {
+      dispatch(deleteProduit(itemToDelete)).then(() => {
+        dispatch(getAllProduit()); // Recharger les données après suppression
+        toggleDeleteModal(); // Fermer le modal après la suppression
+      });
+    }
+  };
+
   const handleEditClick = (item) => {
     // Assurez-vous que l'objet est copié proprement.
     setSelectedItem({ ...item });
@@ -83,29 +92,16 @@ const Coach = () => {
   const handleEdit = () => {
     // console.log({ selectedItem });
 
-    dispatch(updateCoach({ id: selectedItem.id, selectedItem })).then(() => {
-      dispatch(getAllCoachsByUser()); // C'est une bonne pratique de recharger les données
+    dispatch(updateProduit({ id: selectedItem.id, selectedItem })).then(() => {
+      dispatch(getAllProgduitsByUser()); // C'est une bonne pratique de recharger les données
       setEditModalOpen(false); // Fermer le modal d'édition ici
     });
-  };
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setSelectedItem((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const confirmDelete = () => {
-    if (itemToDelete) {
-      dispatch(deleteCoach(itemToDelete)).then(() => {
-        dispatch(getAllCoach()); // Recharger les données après suppression
-        toggleDeleteModal(); // Fermer le modal après la suppression
-      });
-    }
   };
 
   return (
     <>
       <div className="flex justify-between items-center sm:px-6 md:px-0 mb-4">
-        <h1 className="text-2xl font-semibold text-gray-900">Coach</h1>
+        <h1 className="text-2xl font-semibold text-gray-900">Produit</h1>
         <button
           onClick={toggleModal}
           className="bg-blue-500 text-white px-4 py-1 rounded-lg text-sm shadow-md hover:bg-blue-600 transition-all mt-2 float-right"
@@ -118,46 +114,47 @@ const Coach = () => {
           <thead className="text-xs text-gray-700 uppercase bg-white">
             <tr>
               <th scope="col" className="px-6 py-3">
-                Nom
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Specialite
+                Nom Produit
               </th>
               <th scope="col" className="px-6 py-3">
                 Description
               </th>
               <th scope="col" className="px-6 py-3">
-                image
+                Image
               </th>
+              <th scope="col" className="px-6 py-3">
+                Prix
+              </th>
+
               <th scope="col" className="px-6 py-3">
                 Action
               </th>
             </tr>
           </thead>
           <tbody className="bg-white">
-            {coachsalle &&
-              coachsalle.map((coach) => (
-                <tr key={coach.id} className="border-b hover:bg-gray-50">
-                  <td className="px-6 py-4">{coach.Nom}</td>
-                  <td className="px-6 py-4">{coach.Specialite}</td>
-                  <td className="px-6 py-4">{coach.Description}</td>
+            {produitsalle &&
+              produitsalle.map((produit) => (
+                <tr key={produit.id} className="border-b hover:bg-gray-50">
+                  <td className="px-6 py-4">{produit.Nomproduit}</td>
+                  <td className="px-6 py-4">{produit.Description}</td>
+                  <td className="px-6 py-4">{produit.Prix}</td>
                   <td className="px-6 py-4">
                     <img
-                      src={coach.file}
-                      alt={coach.title}
+                      src={produit.file}
+                      alt={produit.title}
                       className="w-16 h-16 object-cover"
                     />
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center justify-start space-x-3">
-                      <button onClick={() => handleEditClick(coach)}>
+                      <button onClick={() => handleEditClick(produit)}>
                         <img
                           src="https://cdn-icons-png.flaticon.com/512/2921/2921222.png"
                           alt="Edit"
                           className="w-6 h-6"
                         />
                       </button>
-                      <button onClick={() => handleDeleteClick(coach.id)}>
+                      <button onClick={() => handleDeleteClick(produit.id)}>
                         <img
                           src="https://cdn-icons-png.flaticon.com/512/3096/3096673.png"
                           alt="Delete"
@@ -172,8 +169,6 @@ const Coach = () => {
         </table>
       </div>
 
-      {/* Modal d'ajout */}
-
       {isModalOpen && (
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20">
@@ -186,7 +181,7 @@ const Coach = () => {
                       className="text-lg leading-6 font-medium text-gray-900"
                       id="modal-title"
                     >
-                      Ajouter Nouveau Coach
+                      Ajouter Nouveau Produit
                     </h3>
                     <div className="mt-2">
                       {/* Formulaire d'ajout */}
@@ -196,47 +191,32 @@ const Coach = () => {
                           placeholder="Nom"
                           className="w-full px-3 py-2 border border-gray-300 rounded-md"
                           onChange={(e) =>
-                            setCoach({ ...coach, Nom: e.target.value })
+                            setProduit({
+                              ...produit,
+                              Nomproduit: e.target.value,
+                            })
                           }
                         />
 
-                        <select onChange={handleSelectChange}>
-                          <option value="select">Select Specialite</option>
-                          <option value="cardio_training">
-                            Musculation et Conditionnement Physique
-                          </option>
-                          <option value="cardio_training">
-                            Cardio-Training
-                          </option>
-                          <option value="crossfit">CrossFit</option>
-                          <option value="yoga_pilates">Yoga et Pilates</option>
-                          <option value="boxing_martial_arts">
-                            Boxe et Arts Martiaux
-                          </option>
-                          <option value="functional_training">
-                            Entraînement Fonctionnel
-                          </option>
-                          <option value="rehabilitation">
-                            Spécialiste en Réhabilitation
-                          </option>
-                          <option value="nutrition_dietetics">
-                            Nutrition et Diététique
-                          </option>
-                          <option value="senior_training">
-                            Entraînement pour Seniors
-                          </option>
-                          <option value="sport_specific_training">
-                            Entraînement Sportif Spécifique
-                          </option>
-                        </select>
                         <textarea
                           placeholder="Description"
                           className="w-full px-3 py-2 border border-gray-300 rounded-md"
                           onChange={(e) =>
-                            setCoach({ ...coach, Description: e.target.value })
+                            setProduit({
+                              ...produit,
+                              Description: e.target.value,
+                            })
                           }
                           rows="3"
                         ></textarea>
+                        <input
+                          type="text"
+                          placeholder="prix"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                          onChange={(e) =>
+                            setProduit({ ...produit, Prix: e.target.value })
+                          }
+                        />
                         <input
                           type="file"
                           name="image"
@@ -287,12 +267,12 @@ const Coach = () => {
                   className="text-xl leading-6 font-bold text-gray-900"
                   id="modal-title"
                 >
-                  Supprimer Coach
+                  Supprimer Produit
                 </h3>
 
                 <div className="mt-4 mb-6">
                   <p className="text-base font-light text-gray-700 tracking-wide">
-                    Êtes-vous sûr de vouloir supprimer ce coach ?
+                    Êtes-vous sûr de vouloir supprimer ce Produit ?
                   </p>
                 </div>
               </div>
@@ -330,31 +310,19 @@ const Coach = () => {
                       className="text-lg leading-6 font-medium text-gray-900"
                       id="modal-title"
                     >
-                      Modifier Coach
+                      Modifier Produit
                     </h3>
                     <div className="mt-2">
                       {/* Formulaire de modification */}
                       <form className="space-y-4">
                         <input
                           type="text"
-                          placeholder="Nom "
-                          value={selectedItem.Nom}
+                          placeholder="Nomproduit "
+                          value={selectedItem.Nomproduit}
                           onChange={(e) =>
                             setSelectedItem({
                               ...selectedItem,
-                              Nom: e.target.value,
-                            })
-                          }
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                        />
-                        <input
-                          type="text"
-                          placeholder="Spécialité"
-                          value={selectedItem.Specialite}
-                          onChange={(e) =>
-                            setSelectedItem({
-                              ...selectedItem,
-                              Specialite: e.target.value,
+                              Nomproduit: e.target.value,
                             })
                           }
                           className="w-full px-3 py-2 border border-gray-300 rounded-md"
@@ -371,6 +339,19 @@ const Coach = () => {
                           className="w-full px-3 py-2 border border-gray-300 rounded-md"
                           rows="3"
                         ></textarea>
+
+                        <input
+                          type="text"
+                          placeholder="Prix"
+                          value={selectedItem.Prix}
+                          onChange={(e) =>
+                            setSelectedItem({
+                              ...selectedItem,
+                              Prix: e.target.value,
+                            })
+                          }
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                        />
                         <input
                           type="file"
                           name="file"
@@ -412,4 +393,4 @@ const Coach = () => {
   );
 };
 
-export default Coach;
+export default Produit;

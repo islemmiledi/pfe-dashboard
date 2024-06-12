@@ -6,7 +6,7 @@ import { FaCouch } from "react-icons/fa";
 import { HiViewGrid } from "react-icons/hi";
 import { Link } from "react-router-dom";
 import { FaUserTie, FaUsers } from "react-icons/fa";
-import { MdFitnessCenter } from "react-icons/md";
+import { MdFitnessCenter, MdMessage, MdNotifications } from "react-icons/md";
 
 import logo from "../../assets/images/logo.png";
 import LogoutIcon from "../../assets/icons/logout.svg";
@@ -14,14 +14,13 @@ import LogoutIcon from "../../assets/icons/logout.svg";
 const navigation = [
   { name: "Dashboard", href: "/dash-admin", icon: HiViewGrid, current: true },
   {
-    name: "Gerant",
+    name: "Client",
     href: "/gerant",
     icon: FaUserTie,
     current: false,
   },
   { name: "Membres", href: "/membres", icon: FaUsers, current: false },
   { name: "Salle", href: "/salle", icon: MdFitnessCenter, current: false },
-  
 ];
 const userNavigation = [{ name: "Logout", href: "#" }];
 
@@ -75,7 +74,7 @@ function SideBar({ menu, children, logout }) {
             leaveFrom="translate-x-0"
             leaveTo="-translate-x-full"
           >
-            <div className="relative max-w-xs w-full bg-white pt-5 pb-4 flex-1 flex flex-col">
+            <div className="relative max-w-xs w-full bg-gray-800 pt-5 pb-4 flex-1 flex flex-col">
               <Transition.Child
                 as={Fragment}
                 enter="ease-in-out duration-300"
@@ -96,7 +95,7 @@ function SideBar({ menu, children, logout }) {
                 </div>
               </Transition.Child>
               <div className="flex-shrink-0 px-4 flex items-center">
-                <img className="h-16 w-auto" src={logo} alt="Workflow" />{" "}
+                <img className="h-24 w-32" src={logo} alt="Workflow" />
               </div>
               <div className="mt-5 flex-1 h-0 overflow-y-auto">
                 <nav className="px-2 space-y-1">
@@ -138,7 +137,7 @@ function SideBar({ menu, children, logout }) {
         {/* Sidebar component, swap this element with another sidebar if you like */}
         <div className="border-r border-gray-200 pt-5 flex flex-col flex-grow bg-white overflow-y-auto">
           <div className="flex-shrink-0 px-4 flex items-center">
-            <img className="h-16 w-auto" src={logo} alt="Workflow" />
+            <img className="h-24 w-32" src={logo} alt="Workflow" />
           </div>
           <div className="flex-grow mt-5 flex flex-col">
             <nav className="flex-1 px-2 pb-4 space-y-1">
@@ -211,6 +210,14 @@ function SideBar({ menu, children, logout }) {
                   className="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
                   <span className="sr-only">View notifications</span>
+                  <MdNotifications className="h-6 w-6" aria-hidden="true" />
+                </button>
+                <button
+                  type="button"
+                  className="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  <span className="sr-only">View messages</span>
+                  <MdMessage className="h-6 w-6" aria-hidden="true" />
                 </button>
 
                 {/* Profile dropdown */}

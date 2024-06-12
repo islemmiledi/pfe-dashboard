@@ -36,9 +36,10 @@ function Salle() {
     titre: "",
     file: "",
     description: "",
+    Typetheme: "",
   });
 
-  const { Nom, titre, file, description } = salle;
+  const { Nom, titre, file, description, Typetheme } = salle;
 
   // const options = [
   //   { value: "wifi", label: "Wifi" },
@@ -47,9 +48,9 @@ function Salle() {
   //   // Ajoutez plus d'options ici
   // ];
 
-  // const handleSelectChange = (e) => {
-  //   setSalle({ ...salle, Typeabonnement: e.target.value });
-  // };
+  const handleSelectChange = (e) => {
+    setSalle({ ...salle, Typetheme: e.target.value });
+  };
   const handleImageChange = (e) => {
     setSalle({ ...salle, file: e.target.files[0] });
   };
@@ -68,6 +69,7 @@ function Salle() {
     myForm.set("titre", titre);
     myForm.set("file", file);
     myForm.set("description", description);
+    myForm.set("Typetheme", Typetheme);
 
     dispatch(ajoutSalle(myForm)).then(() => {
       dispatch(getAllSalle());
@@ -161,6 +163,9 @@ function Salle() {
                       Description
                     </th>
                     <th scope="col" className="px-6 py-4">
+                      Typetheme
+                    </th>
+                    <th scope="col" className="px-6 py-4">
                       Logo
                     </th>
 
@@ -187,6 +192,9 @@ function Salle() {
                         </td>
                         <td className="whitespace-nowrap px-6 py-4">
                           {salle.description}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4">
+                          {salle.Typetheme}
                         </td>
                         {/* <td className="whitespace-nowrap px-6 py-4">
                           {salle.Caracteristiques.join(", ")}
@@ -265,6 +273,14 @@ function Salle() {
                             setSalle({ ...salle, description: e.target.value })
                           }
                         />
+                        {/* <input
+                          type="text"
+                          placeholder="Typetheme"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                          onChange={(e) =>
+                            setSalle({ ...salle, Typetheme: e.target.value })
+                          }
+                        /> */}
 
                         <input
                           type="file"
@@ -300,14 +316,12 @@ function Salle() {
                           />
                         </label> */}
 
-                        {/* <select onChange={handleSelectChange}>
-                          <option value="select">
-                            Select type d'Abonnement
-                          </option>
+                        <select onChange={handleSelectChange}>
+                          <option value="select">Select type theme</option>
                           <option value="premium">Premium</option>
                           <option value="silver">Silver</option>
                           <option value="gold">Gold</option>
-                        </select> */}
+                        </select>
 
                         <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                           <button
@@ -352,7 +366,7 @@ function Salle() {
                   className="text-xl leading-6 font-bold text-gray-900"
                   id="modal-title"
                 >
-                  Supprimer Membre
+                  Supprimer Salle
                 </h3>
 
                 <div className="mt-4 mb-6">

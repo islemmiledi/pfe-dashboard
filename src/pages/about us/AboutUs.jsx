@@ -50,6 +50,9 @@ const AboutUs = () => {
   const handleImageChange = (e) => {
     setAboutUs({ ...aboutus, file: e.target.files[0] });
   };
+  const handleImageUpdateChange = (e) => {
+    setSelectedItem({ ...selectedItem, file: e.target.files[0] });
+  };
   const toggleModal = () => setModalOpen(!isModalOpen);
   const toggleEditModal = () => setEditModalOpen(!isEditModalOpen);
   const toggleDeleteModal = () => setDeleteModalOpen(!isDeleteModalOpen);
@@ -84,15 +87,18 @@ const AboutUs = () => {
   };
 
   const handleEditClick = (item) => {
-    setSelectedItem(item);
+    // Assurez-vous que l'objet est copié proprement.
+    setSelectedItem({ ...item });
     toggleEditModal();
   };
-  const handleEdit = () => {
-    dispatch(updateAboutUs({ id: selectedItem.id, selectedItem })).then(() => {
-      dispatch(getAllAboutUs());
-    });
 
-    setEditModalOpen(false);
+  const handleEdit = () => {
+    // console.log({ selectedItem });
+
+    dispatch(updateAboutUs({ id: selectedItem.id, selectedItem })).then(() => {
+      dispatch(getAllAboutUssByUser()); // C'est une bonne pratique de recharger les données
+      setEditModalOpen(false); // Fermer le modal d'édition ici
+    });
   };
 
   return (
@@ -142,7 +148,13 @@ const AboutUs = () => {
                   <td className="px-6 py-4">{aboutus.introDescription}</td> */}
                   <td className="px-6 py-4">{aboutus.communityHighlight}</td>
                   <td className="px-6 py-4">{aboutus.valueProposition}</td>
-                  <td className="px-6 py-4">{aboutus.file}</td>
+                  <td className="px-6 py-4">
+                    <img
+                      src={aboutus.file}
+                      alt={aboutus.title}
+                      className="w-16 h-16 object-cover"
+                    />
+                  </td>{" "}
                   <td className="px-6 py-4">
                     <div className="flex items-center justify-start space-x-3">
                       <button onClick={() => handleEditClick(aboutus)}>
@@ -350,15 +362,9 @@ const AboutUs = () => {
                         type="file"
                         accept="image/*"
                         className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                        onChange={handleImageChange}
+                        onChange={handleImageUpdateChange}
                       />
-                      {selectedItem.image && (
-                        <img
-                          src={selectedItem.image}
-                          alt="Current"
-                          className="w-20 h-20 mt-2"
-                        />
-                      )}
+
                       <div className="flex items-center justify-end space-x-4">
                         <button
                           type="button"

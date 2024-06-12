@@ -10,6 +10,8 @@ import aboutusSlice from "./slices/aboutusSlice";
 import offreSlice from "./slices/offreSlice";
 import accueilSlice from "./slices/accueilSlice";
 import programSlice from "./slices/programSlice";
+import produitSlice from "./slices/produitSlice";
+import ordresSlice from "./slices/ordreSlice";
 
 const store = configureStore({
   reducer: {
@@ -23,6 +25,8 @@ const store = configureStore({
     offre: offreSlice,
     accueil: accueilSlice,
     Program: programSlice,
+    Produit: produitSlice,
+    Ordres: ordresSlice,
   },
 });
 export default store;

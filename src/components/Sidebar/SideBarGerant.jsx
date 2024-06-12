@@ -11,6 +11,8 @@ import {
   FaInfoCircle,
   FaHouseUser,
   FaFileAlt,
+  FaBoxOpen,
+  FaClipboardList,
 } from "react-icons/fa";
 import { AiOutlineGift, AiOutlineInfoCircle } from "react-icons/ai"; // Pour AiOutlineGift
 
@@ -18,75 +20,111 @@ import logo from "../../assets/images/logo.png";
 import LogoutIcon from "../../assets/icons/logout.svg";
 import { FaFileCode } from "@fortawesome/free-solid-svg-icons"; // Make sure this is imported at the top of your file
 
-import { MdSchedule, MdContacts, MdOutlineWeb } from "react-icons/md";
+import {
+  MdSchedule,
+  MdContacts,
+  MdOutlineWeb,
+  MdMessage,
+  MdNotifications,
+} from "react-icons/md";
+import { useSelector } from "react-redux";
 
-const navigation = [
-  { name: "Dashboard", href: "/dash-gerant", icon: HiViewGrid, current: true },
-  {
-    name: "Coach",
-    href: "/coach",
-    icon: FaUserSecret,
-    current: false,
-  },
-  {
-    name: "Accueil",
-    href: "/accueil",
-    icon: FaHouseUser,
-    current: false,
-  },
-
-  {
-    name: "AboutUs",
-    href: "/aboutus",
-    icon: FaInfoCircle,
-    current: false,
-  },
-
-  {
-    name: "Programme",
-    href: "/program",
-    icon: FaFileAlt,
-    current: false,
-  },
-  {
-    name: "Gestion Membres",
-    href: "/gestion-membres",
-    icon: FaUsers,
-    current: false,
-  },
-
-  {
-    name: "Contact",
-    href: "/contact",
-    icon: MdContacts,
-    current: false,
-  },
-  {
-    name: "Footer",
-    href: "/footer",
-    icon: MdOutlineWeb,
-    current: false,
-  },
-  {
-    name: "Nos Offres",
-    href: "/nosoffres",
-    icon: AiOutlineGift,
-    current: false,
-  },
-  {
-    name: "Information Salle",
-    href: "/informationslle",
-    icon: AiOutlineInfoCircle,
-    current: false,
-  },
-];
 const userNavigation = [{ name: "Logout", href: "#" }];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 function SideBarGerant({ menu, children, logout }) {
-  console.log("Rendering children:", children);
+  const isGoldSalle = useSelector((state) => state?.gerant?.current?.data);
+  const gold = isGoldSalle?.isGold;
+  const navigation = [
+    {
+      name: "Dashboard",
+      href: "/dash-gerant",
+      icon: HiViewGrid,
+      current: true,
+    },
+    {
+      name: "Coach",
+      href: "/coach",
+      icon: FaUserSecret,
+      current: false,
+    },
+    {
+      name: "Accueil",
+      href: "/accueil",
+      icon: FaHouseUser,
+      current: false,
+    },
+
+    {
+      name: "AboutUs",
+      href: "/aboutus",
+      icon: FaInfoCircle,
+      current: false,
+    },
+
+    {
+      name: "Programme",
+      href: "/program",
+      icon: FaFileAlt,
+      current: false,
+    },
+    {
+      name: "Gestion Membres",
+      href: "/gestion-membres",
+      icon: FaUsers,
+      current: false,
+    },
+
+    {
+      name: "Contact",
+      href: "/contact",
+      icon: MdContacts,
+      current: false,
+    },
+    {
+      name: "Footer",
+      href: "/footer",
+      icon: MdOutlineWeb,
+      current: false,
+    },
+    {
+      name: "Nos Offres",
+      href: "/nosoffres",
+      icon: AiOutlineGift,
+      current: false,
+    },
+    // {
+    //   name: "Information Salle",
+    //   href: "/informationslle",
+    //   icon: AiOutlineInfoCircle,
+    //   current: false,
+    // },
+
+    {
+      name: "Produit",
+      href: "/produit",
+      icon: FaBoxOpen,
+      current: false,
+    },
+    {
+      name: "Ordres",
+      href: "/ordres",
+      icon: FaClipboardList, // Nouvelle icône pour les ordres
+      current: false,
+    },
+  ];
+  const filteredNavigation = navigation.filter((item) => {
+    // Hide "Produit" if isGoldSalle is false
+    if (
+      (item.name === "Produit" && !gold) ||
+      (item.name === "Ordres" && !gold)
+    ) {
+      return false;
+    }
+    return true;
+  });
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -155,11 +193,11 @@ function SideBarGerant({ menu, children, logout }) {
                 </div>
               </Transition.Child>
               <div className="flex-shrink-0 px-4 flex items-center">
-                <img className="h-16 w-auto" src={logo} alt="Workflow" />{" "}
+                <img className="h-24 w-32" src={logo} alt="Workflow" />
               </div>
               <div className="mt-5 flex-1 h-0 overflow-y-auto">
                 <nav className="px-2 space-y-1">
-                  {navigation.map((item) => (
+                  {filteredNavigation.map((item) => (
                     <Link
                       key={item.name}
                       to={item.href}
@@ -197,11 +235,11 @@ function SideBarGerant({ menu, children, logout }) {
         {/* Sidebar component, swap this element with another sidebar if you like */}
         <div className="border-r border-gray-200 pt-5 flex flex-col flex-grow bg-white overflow-y-auto">
           <div className="flex-shrink-0 px-4 flex items-center">
-            <img className="h-16 w-auto" src={logo} alt="Workflow" />
+            <img className="h-24 w-32" src={logo} alt="Workflow" />
           </div>
           <div className="flex-grow mt-5 flex flex-col">
             <nav className="flex-1 px-2 pb-4 space-y-1">
-              {navigation.map((item) => (
+              {filteredNavigation.map((item) => (
                 <Link
                   key={item.name}
                   to={item.href}
@@ -270,6 +308,14 @@ function SideBarGerant({ menu, children, logout }) {
                   className="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
                   <span className="sr-only">View notifications</span>
+                  <MdNotifications className="h-6 w-6" aria-hidden="true" />
+                </button>
+                <button
+                  type="button"
+                  className="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  <span className="sr-only">View messages</span>
+                  <MdMessage className="h-6 w-6" aria-hidden="true" />
                 </button>
 
                 {/* Profile dropdown */}

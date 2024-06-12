@@ -2,8 +2,8 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { apiBaseUrl } from "../../proxy";
 
-export const getAllProgram = createAsyncThunk(
-  "get/allProgram",
+export const getAllProduit = createAsyncThunk(
+  "get/allProduit",
   async (salleId) => {
     const accessToken = localStorage.getItem("token");
     const configuration = {
@@ -13,7 +13,7 @@ export const getAllProgram = createAsyncThunk(
     };
     try {
       let response = await axios.get(
-        `${apiBaseUrl}/program/program-salle?salleId=${salleId}`,
+        `${apiBaseUrl}/produit/produit-salle?salleId=${salleId}`,
         configuration
       );
       return response;
@@ -23,8 +23,8 @@ export const getAllProgram = createAsyncThunk(
   }
 );
 
-export const getAllProgramsByUser = createAsyncThunk(
-  "get/AllProgramsByUser",
+export const getAllProgduitsByUser = createAsyncThunk(
+  "get/AllProduitsByUser",
   async () => {
     // console.log(salleId);
     try {
@@ -35,7 +35,7 @@ export const getAllProgramsByUser = createAsyncThunk(
         },
       };
       let response = await axios.get(
-        `${apiBaseUrl}/program/program-user`,
+        `${apiBaseUrl}/produit/produit-user`,
         configuration
       );
       return response;
@@ -45,20 +45,11 @@ export const getAllProgramsByUser = createAsyncThunk(
   }
 );
 
-export const getSalleByWebsite = createAsyncThunk(
-  "get/SalleByWebsite",
-  async (website) => {
+export const getOneProduitById = createAsyncThunk(
+  "get/ProduitId",
+  async (id) => {
     try {
-      const accessToken = localStorage.getItem("token");
-      const configuration = {
-        headers: {
-          Authorization: accessToken ? `Bearer ${accessToken}` : "",
-        },
-      };
-      let response = await axios.post(
-        `${apiBaseUrl}salle/${website}`,
-        configuration
-      );
+      let response = await axios.get(`${apiBaseUrl}/produit/${id}`);
       return response;
     } catch (error) {
       console.log(error);
@@ -66,7 +57,17 @@ export const getSalleByWebsite = createAsyncThunk(
   }
 );
 
-export const ajoutProgram = createAsyncThunk(
+export const deleteProduit = createAsyncThunk("delete/Produit", async (id) => {
+  try {
+    let response = await axios.delete(`${apiBaseUrl}/produit/${id}`);
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+
+export const ajoutProduit = createAsyncThunk(
   "register/addProgram",
   async (myForm) => {
     try {
@@ -79,7 +80,7 @@ export const ajoutProgram = createAsyncThunk(
         },
       };
       let response = await axios.post(
-        `${apiBaseUrl}/program/create`,
+        `${apiBaseUrl}/produit/create`,
         myForm,
         configuration
       );
@@ -90,17 +91,8 @@ export const ajoutProgram = createAsyncThunk(
   }
 );
 
-export const deleteProgram = createAsyncThunk("delete/Program", async (id) => {
-  try {
-    let response = await axios.delete(`${apiBaseUrl}/program/${id}`);
-    return response;
-  } catch (error) {
-    console.log(error);
-  }
-});
-
-export const updateProgram = createAsyncThunk(
-  "put/updateProgram",
+export const updateProduit = createAsyncThunk(
+  "put/updateProduit",
   async ({ id, selectedItem }) => {
     try {
       const configuration = {
@@ -109,7 +101,7 @@ export const updateProgram = createAsyncThunk(
         },
       };
       let response = await axios.post(
-        `${apiBaseUrl}/program/${id}`,
+        `${apiBaseUrl}/produit/${id}`,
         selectedItem,
         configuration
       );

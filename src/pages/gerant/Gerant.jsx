@@ -44,12 +44,14 @@ function Gerant() {
     role: "",
     file: "",
     salle: "",
+    isGold: false,
   });
 
   const [page, setPage] = useState(1);
   const totalePages = totalPages;
 
-  const { email, firstName, lastName, password, role, file, salle } = gerant;
+  const { email, firstName, lastName, password, role, file, salle, isGold } =
+    gerant;
   const handleSelectChange = (e) => {
     setGerant({ ...gerant, role: e.target.value });
   };
@@ -58,6 +60,9 @@ function Gerant() {
   };
   const handleImageChange = (e) => {
     setGerant({ ...gerant, file: e.target.files[0] });
+  };
+  const handleGoldChange = (e) => {
+    setGerant({ ...gerant, isGold: JSON.parse(e.target.value) });
   };
 
   const generateRandomPassword = () => {
@@ -83,9 +88,10 @@ function Gerant() {
     myForm.set("role", role);
     myForm.set("file", file);
     myForm.set("salle", salle);
+    myForm.set("isGold", isGold);
 
     dispatch(ajoutGerant(myForm)).then(() => {
-      dispatch(getAllGerant());
+      dispatch(getAllGerantWithPagination());
     });
 
     setModalOpen(!isModalOpen);
@@ -126,7 +132,7 @@ function Gerant() {
   return (
     <>
       <div className="flex justify-between items-center sm:px-6 md:px-0">
-        <h1 className="text-2xl font-semibold text-gray-900">Gérant</h1>
+        <h1 className="text-2xl font-semibold text-gray-900">Clients</h1>
         <button
           onClick={toggleModal}
           className="bg-blue-500 text-white px-4 py-1 rounded-lg text-sm shadow-md hover:bg-blue-600 transition-all mt-2"
@@ -223,7 +229,7 @@ function Gerant() {
                       className="text-lg leading-6 font-medium text-gray-900"
                       id="modal-title"
                     >
-                      Ajouter Nouveau Gérant
+                      Ajouter Nouveau Client
                     </h3>
                     <div className="mt-2">
                       {/* Formulaire d'ajout */}
@@ -241,6 +247,7 @@ function Gerant() {
                             }
                           />
                         </label>
+
                         <label>
                           <input
                             type="text"
@@ -306,6 +313,21 @@ function Gerant() {
                               ))}
                           </select>
                         </label>
+                        <div class="flex items-center">
+                          <input
+                            id="checked-checkbox"
+                            type="checkbox"
+                            onChange={handleGoldChange}
+                            value={!gerant.isGold}
+                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                          />
+                          <label
+                            for="checked-checkbox"
+                            className="ms-2 text-sm font-medium text-gray-900 "
+                          >
+                            Theme gold
+                          </label>
+                        </div>
 
                         <input
                           type="file"

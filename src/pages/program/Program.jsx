@@ -80,20 +80,16 @@ const Program = () => {
     toggleDeleteModal(); // Ouvrir le modal pour demander confirmation
   };
   const handleEditClick = (item) => {
-    setSelectedItem(item);
+    // Assurez-vous que l'objet est copié proprement.
+    setSelectedItem({ ...item });
     toggleEditModal();
   };
-  const handleEdit = (e) => {
-    e.preventDefault();
-    const myForm = new FormData();
-    myForm.set("title", selectedItem.title);
-    myForm.set("description", selectedItem.description);
-    if (selectedItem.file instanceof File) {
-      myForm.set("file", selectedItem.file);
-    }
-    console.log(myForm);
-    dispatch(updateProgram(selectedItem.id, myForm)).then(() => {
-      dispatch(getAllProgram()); // C'est une bonne pratique de recharger les données
+
+  const handleEdit = () => {
+    // console.log({ selectedItem });
+
+    dispatch(updateProgram({ id: selectedItem.id, selectedItem })).then(() => {
+      dispatch(getAllProgramsByUser()); // C'est une bonne pratique de recharger les données
       setEditModalOpen(false); // Fermer le modal d'édition ici
     });
   };
@@ -132,7 +128,7 @@ const Program = () => {
                 description
               </th>
               <th scope="col" className="px-6 py-3">
-                file
+                image
               </th>
               <th scope="col" className="px-6 py-3">
                 Actions
@@ -146,8 +142,13 @@ const Program = () => {
                   <td className="px-6 py-4">{program.id}</td>
                   <td className="px-6 py-4">{program.title}</td>
                   <td className="px-6 py-4">{program.description}</td>
-                  <td className="px-6 py-4">{program.file}</td>
-
+                  <td className="px-6 py-4">
+                    <img
+                      src={program.file}
+                      alt={program.title}
+                      className="w-16 h-16 object-cover"
+                    />
+                  </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center justify-start space-x-3">
                       <button onClick={() => handleEditClick(program)}>

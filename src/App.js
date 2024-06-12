@@ -18,13 +18,14 @@ import Coach from "./pages/coach/Coach";
 import GestionDesMembres from "./pages/Gestion Membre/GestionDesMembres";
 import Contact from "./pages/Contact/Contact";
 import Footer from "./pages/Footer/Footer";
-import InformationSalle from "./pages/Information de la salle/InformationSalle";
 import AboutUs from "./pages/about us/AboutUs";
 import Offre from "./pages/Nos Offres/Offre";
 import Accueil from "./pages/accueil/Accueil";
 import Program from "./pages/program/Program";
 import { useDispatch } from "react-redux";
 import { getfindOneWithId } from "./api/actions/gerant.actions";
+import Produit from "./pages/produit/Produit";
+import Ordre from "./pages/ordre/Ordre";
 
 function App() {
   const dispatch = useDispatch();
@@ -112,11 +113,27 @@ function App() {
               </SideBarGerant>
             }
           />
-          <Route
+          {/* <Route
             path="/informationslle"
             element={
               <SideBarGerant>
                 <InformationSalle />
+              </SideBarGerant>
+            }
+          /> */}
+          <Route
+            path="/produit"
+            element={
+              <SideBarGerant>
+                <Produit />
+              </SideBarGerant>
+            }
+          />
+          <Route
+            path="/ordres"
+            element={
+              <SideBarGerant>
+                <Ordre />
               </SideBarGerant>
             }
           />

@@ -46,6 +46,7 @@ export const getfindOneWithId = createAsyncThunk(
         `${apiBaseUrl}/user/oneuser`,
         configuration
       );
+
       return response;
     } catch (error) {
       console.log(error);

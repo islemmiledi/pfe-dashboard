@@ -79,10 +79,10 @@ export const updateAboutUs = createAsyncThunk(
     try {
       const configuration = {
         headers: {
-          "Content-type": "application/json",
+          "Content-Type": "multipart/form-data",
         },
       };
-      let response = await axios.put(
+      let response = await axios.post(
         `${apiBaseUrl}/aboutus/${id}`,
         selectedItem,
         configuration
